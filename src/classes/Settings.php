@@ -57,6 +57,9 @@ class Settings extends Page
 	/// File where the admin settings are stored
 	static public $admin_settings_file;
 
+	/// Source/Destination Directory list of Symbolic links.
+	static public $symlink_src;
+	static public $symlink_dst;
 
 	/**** Admin Settings ****/
 
@@ -139,6 +142,11 @@ class Settings extends Page
 	///FFMPEG Option
 	static public $ffmpeg_option	=	"-threads 4 -qmax 40 -acodec libvorbis -ab 128k -ar 41000 -vcodec libvpx";	
 
+	/// preg_quote_with_slash
+	static public function make_symlink_replace_pattern($item) {
+		$test = preg_quote($item, "/");
+		return "/^$test/";
+	}
 
 	/**
 	 * Create Settings page
@@ -178,6 +186,12 @@ class Settings extends Page
 		Settings::$thumbs_dir	=	$config->ps_generated."/Thumbs/";
 		Settings::$conf_dir		=	$config->ps_generated."/Conf/";
 		Settings::$admin_settings_file = $config->ps_generated."/Conf/admin_settings.ini";
+
+		/// Setup link
+		Settings::$symlink_src	=	array_map("Settings::make_symlink_replace_pattern", $config->symlink_src);
+		Settings::$symlink_dst	=	$config->symlink_dst;
+		ksort(Settings::$symlink_src);
+		ksort(Settings::$symlink_dst);
 
 		/// Set TimeZone
 		date_default_timezone_set($config->timezone);

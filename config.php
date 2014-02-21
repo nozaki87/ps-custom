@@ -40,4 +40,11 @@ $config->ps_generated   = "path_where_photoshow_generates_files_goes_here";
 // Local timezone. Default one is "Europe/Paris".
 #$config->timezone = "Europe/Paris";
 
+// If you use symbolic link in photos_dir, please set source/destination dir path
+// to notify PhotoShow where they are.
+$config->symlink_src[0] = "/external/storage1/photo";
+$config->symlink_src[1] = "/external/storage2/photo";
+$config->symlink_dst[0] = "path_to_your_photos_dir_goes_here/photo_on_storage1";
+$config->symlink_dst[1] = "path_to_your_photos_dir_goes_here/photo_on_storage2";
+
 ?>

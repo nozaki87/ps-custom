@@ -176,6 +176,8 @@ class File
 		
 		$rf	=	realpath($file);
 		$rd =	realpath($dir);
+
+		$rf = preg_replace(Settings::$symlink_src, Settings::$symlink_dst, $rf);
 		
 		if($rf==$rd) return "";
 

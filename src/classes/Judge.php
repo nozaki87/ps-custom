@@ -305,6 +305,8 @@ class Judge
 		$rf =	realpath($f);
 		$rd =	realpath(Settings::$photos_dir);
 		
+		$rf = preg_replace(Settings::$symlink_src, Settings::$symlink_dst, $rf); 
+
 		if($rf == $rd) return true;
 
 		if( substr($rf,0,strlen($rd)) == $rd ){
