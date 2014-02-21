@@ -198,6 +198,7 @@ class Judge
 			$rightsfiles = NULL;
 		}
 
+		if (count($rightsfiles) > 0) {
 		foreach($rightsfiles as $rf){
 			$f = Judge::associated_file($rf);
             if(($public_search and Judge::is_public($f))
@@ -214,6 +215,7 @@ class Judge
                     }
                 }
         }
+		}
 
 		// Check subdirs
 		foreach(Menu::list_dirs($dir) as $d){
