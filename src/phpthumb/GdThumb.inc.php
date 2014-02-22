@@ -202,7 +202,8 @@ class GdThumb extends ThumbBase
 		$this->preserveAlpha();		
 		
 		// and create the newly sized image
-		imagecopyresampled
+		//imagecopyresampled
+		imagecopyresized
 		(
 			$this->workingImage,
 			$this->oldImage,
@@ -303,7 +304,8 @@ class GdThumb extends ThumbBase
 			$cropY = intval(($this->currentDimensions['height'] - $this->maxHeight) / 2);
 		}
 		
-		imagecopyresampled
+		//imagecopyresampled
+		imagecopyresized
 		(
             $this->workingImage,
             $this->oldImage,
@@ -355,7 +357,8 @@ class GdThumb extends ThumbBase
 		
 		$this->preserveAlpha();
 		
-		ImageCopyResampled(
+		//ImageCopyResampled(
+		ImageCopyResized(
 			$this->workingImage,
 			$this->oldImage,
 			0,
@@ -482,7 +485,8 @@ class GdThumb extends ThumbBase
 		
 		$this->preserveAlpha();
 		
-		imagecopyresampled
+		//imagecopyresampled
+		imagecopyresized
 		(
 			$this->workingImage,
 			$this->oldImage,
