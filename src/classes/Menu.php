@@ -212,7 +212,10 @@ class Menu implements HTMLObject
 			/// Content isn't hidden and is a file
 			if($content[0] != '.' || $hidden){
 				if(is_file($path=$dir."/".$content)){
-					if(File::Type($path) && (File::Type($path) == "Image" || File::Type($path)=="Video")){
+					//error_log("perror5: $path , $stopatfirst");
+					$ftype = File::Type($path);
+					// if(File::Type($path) && (File::Type($path) == "Image" || File::Type($path)=="Video")){
+					if($ftype && ($ftype == "Image" || $ftype=="Video")){
 						/// Add content to list
 						$list[]=$path;
 
@@ -224,7 +227,8 @@ class Menu implements HTMLObject
 				}else{
 
 					if($rec){
-						$list = array_merge($list,Menu::list_files($dir."/".$content,true));
+//						$list = array_merge($list,Menu::list_files($dir."/".$content,true));
+						$list = array_merge($list,Menu::list_files($dir."/".$content,true,$hidden,$stopatfirst));
 					}
 
 				}

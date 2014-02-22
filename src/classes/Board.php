@@ -242,7 +242,8 @@ class Board implements HTMLObject
 				continue;
 			}
 
-			$f = Menu::list_files($d,true);
+			//$f = Menu::list_files($d,true);
+			$f = Menu::list_files($d,true,false,true);
 						
 			if( CurrentUser::$admin || CurrentUser::$uploader || sizeof($f) > 0){
 				if($firstImg){
