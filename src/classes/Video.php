@@ -193,7 +193,8 @@ class Video implements HTMLObject
             //Create Thumbnail jpg in Thumbs folder
             //TODO: scaled thumbnail would be better
 
-            $offset = self::GetDuration($file)/2;
+            //$offset = self::GetDuration($file)/2;
+            $offset = 1;
             $dimensions = self::GetScaledDimension($file, 320);
             
             $u=Settings::$ffmpeg_path.' -itsoffset -'.$offset.'  -i "'.$file.'" -vcodec mjpeg -vframes 1 -an -f rawvideo -s '.$dimensions['x'].'x'.$dimensions['y'].' -y "'.$thumb_path_jpg.'"';
