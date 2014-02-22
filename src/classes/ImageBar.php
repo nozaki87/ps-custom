@@ -75,6 +75,10 @@ class ImageBar
 		$this->buttons['next'] = 	$t."p=n&f=".$file;
 		$this->buttons['slideshow'] = 	$t."f=".$file;
 
+		$next_viewmode = CurrentUser::$viewmode + 1;
+		if ($next_viewmode > CurrentUser::$viewmode_max) $next_viewmode = 0;
+		$this->buttons['view'] = 	$t."f=".$file."&vm=".$next_viewmode;
+
 	}
 
 	/**

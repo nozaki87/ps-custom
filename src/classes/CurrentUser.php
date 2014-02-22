@@ -66,6 +66,10 @@ class CurrentUser
 	/// Type of page to display
 	public static $page;
 
+	/// View mode info
+	public static $viewmode = 0;
+	public static $viewmode_max = 2;
+
 	/// File containing users info
 	static public $accounts_file;
 
@@ -258,6 +262,9 @@ class CurrentUser
 			CurrentUser::$action =	"JS";
 		}
 
+		if(isset($_GET['vm'])){
+			CurrentUser::$viewmode = $_GET['vm'];
+		}
 
 		/// Set default action
 		if(!isset(CurrentUser::$action)){

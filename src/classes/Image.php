@@ -60,6 +60,8 @@ class Image implements HTMLObject
 	/// Force big image or not
 	private $t;
 	
+	/// Viewmode
+	private $viewmode;
 	
 	/**
 	 * Create image
@@ -67,7 +69,7 @@ class Image implements HTMLObject
 	 * @param string $file 
 	 * @author Thibaud Rohmer
 	 */
-	public function __construct($file=NULL,$forcebig = false){
+	public function __construct($file=NULL,$forcebig = false, $viewmode = 0){
 		
 		/// Check file type
 		if(!isset($file) || !File::Type($file) || File::Type($file) != "Image")
@@ -88,6 +90,21 @@ class Image implements HTMLObject
 		}else{
 			$this->t = "Img";
 		}
+
+		/// Auto viewmode setting
+		if($viewmode == 0) {
+			$exif = new Exif($file);
+			$exifinfo = $exif->getEXIF();
+			$model = $exifinfo['Model'];
+			error_log($model."RICOH THETA");
+			if(preg_match("/RICOH THETA.+/i",$model)) {
+				$this->viewmode = 2;
+			} else {
+				$this->viewmode = 1;
+			}
+		} else {
+			$this->viewmode = $viewmode;
+		}
 	}
 	
 	
@@ -98,6 +115,20 @@ class Image implements HTMLObject
 	 * @author Thibaud Rohmer
 	 */
 	public function toHTML(){
+		if ($this->viewmode == 2) {
+			echo 	"<div id='image_big' ";
+			echo 	"style='";
+//			echo 		" max-width:".$this->x."px;";
+//			echo 		" background: black url(\"?t=".$this->t."&f=$this->fileweb\") no-repeat center center;";
+//			echo 		" background-size: contain;";
+//			echo 		" -moz-background-size: contain;";
+			echo 		" height:100%;";
+			echo 	"';>";
+			echo	"<canvas id='iota_canvas' data-theta-img='?t=".$this->t."&f=".$this->fileweb."' data-iota-fisheye='true' ></canvas>";
+			echo	"</div>";
+			echo	"<script src='iota.mod.jsx.js'></script>\n"; 
+			return;
+		}
 		echo 	"<div id='image_big' ";
 		echo 	"style='";
 		echo 		" max-width:".$this->x."px;";

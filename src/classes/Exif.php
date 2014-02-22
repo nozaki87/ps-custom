@@ -134,6 +134,18 @@ class Exif implements HTMLObject
 	}
 	
 	/**
+	 * Return Exif array
+	 *
+	 * @return Exif info
+	 * @author NOZAKI87
+	 */
+	public function getEXIF(){
+		if($this->exif){
+			return $this->exif;
+		}
+	}
+
+	/**
 	 * Parse a string referencing a fraction,
 	 * and returns the value of the function
 	 *

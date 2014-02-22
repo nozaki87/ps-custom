@@ -81,6 +81,7 @@ function show_links(){
 	$('#image_bar #next').show();
 	$('#image_bar #img').show();
 	$('#image_bar #get').show();
+	$('#image_bar #view').show();
 }
 
 function hide_links(){
@@ -89,4 +90,5 @@ function hide_links(){
 	$('#image_bar #next').hide();
 	$('#image_bar #img').hide();
 	$('#image_bar #get').hide();
+	$('#image_bar #view').hide();
 }

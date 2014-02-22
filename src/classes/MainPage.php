@@ -90,7 +90,7 @@ class MainPage extends Page
 		
 		/// Check how to display current file
 		if(is_file(CurrentUser::$path)){
-			$this->image_panel			=	new ImagePanel(CurrentUser::$path);
+			$this->image_panel			=	new ImagePanel(CurrentUser::$path, CurrentUser::$viewmode);
 			$this->image_panel_class 	=	"image_panel";
 			$this->panel				=	new Board(dirname(CurrentUser::$path));
 			$this->panel_class			=	"linear_panel";

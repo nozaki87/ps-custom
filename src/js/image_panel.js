@@ -164,6 +164,10 @@ function init_image_panel(){
 
 	init_comments();
 	init_slideshow_panel();
+
+	if ($("#iota_canvas").size() > 0){
+		JSX.runMain("iota.jsx", []);
+	}
 }
 
 function init_comments(){

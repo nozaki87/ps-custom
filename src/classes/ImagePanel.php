@@ -71,7 +71,7 @@ class ImagePanel implements HTMLObject
 	 * @param string $file 
 	 * @author Thibaud Rohmer
 	 */
-	public function __construct($file=NULL){
+	public function __construct($file=NULL, $viewmode=0){
 		
 		if(!isset($file)){
 			return;
@@ -81,7 +81,7 @@ class ImagePanel implements HTMLObject
 
         if($file_type == "Image"){
             /// Create Image object
-            $this->image	=	new Image($file);
+            $this->image	=	new Image($file, false, $viewmode);
         }
         elseif($file_type == "Video"){
             /// Create Video object
