@@ -70,11 +70,12 @@ class MenuBar implements HTMLObject{
 		echo "<div id='menubar'>\n";
 
 		echo "<div class='align_left'>\n";
-		echo "<a href='.'>PhotoShow</a>\n";
+		echo "<a href='.'>NOZPIC</a>\n";
 		if(isset(CurrentUser::$account)){
 			// User logged in
-			echo "<div class='menubar-button'>- ".Settings::_("menubar","logged")." <a href='?t=Acc'>".htmlentities(CurrentUser::$account->login, ENT_QUOTES ,'UTF-8')."</a></div>\n";
+			//echo "<div class='menubar-button'>- ".Settings::_("menubar","logged")." <a href='?t=Acc'>".htmlentities(CurrentUser::$account->login, ENT_QUOTES ,'UTF-8')." Settings</a></div>\n";
 			echo "</div><div class='align_right'>\n";
+			echo "<div class='menubar-button'><a href='?t=Acc'>".htmlentities(CurrentUser::$account->login, ENT_QUOTES ,'UTF-8')."-SETTINGS</a></div>\n";
 			echo "<a href='?t=Log'>".Settings::_("menubar","logout")."</a>\n";
 			
 			if(CurrentUser::$admin){
