@@ -54,17 +54,17 @@ input[type='submit'] {
 	cursor:				pointer;
 	font-size:			12pt;
 	font-family:		"Trebuchet MS", Helvetica, sans-serif;
-	text-shadow: 		0 -1px 0px rgba(0,0,0,0.7);
-	color:				white;
+/*	text-shadow: 		0 -1px 0px rgba(0,0,0,0.7); */
+	color:				#616161;
 	text-align:			center;
 	padding:			5px;
-	border:				1px solid rgb(0,150,232);
-	background: 		rgb(0,160,232);
-	background: 		-webkit-gradient(linear, left top, left bottom, from(rgb(0,160,232)), to(rgb(0,100,200)));
+/*	border:				1px solid rgb(0,150,232); */
+	background: 		#d7ecf4;
+/*	background: 		-webkit-gradient(linear, left top, left bottom, from(rgb(0,160,232)), to(rgb(0,100,200)));
 	background:			-moz-linear-gradient(-90deg, rgb(0,160,232), rgb(0,100,200));
 
 	-moz-border-radius:	2px;
-	border-radius:		2px;
+	border-radius:		2px; */
 
 }
 

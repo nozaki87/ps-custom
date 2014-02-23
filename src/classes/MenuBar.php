@@ -94,7 +94,7 @@ class MenuBar implements HTMLObject{
 		//echo "<a href='?a=rss'>RSS <img src='./inc/rss.png' height='11px'></a>\n";
 		echo "</div>\n";
 
-		echo "<span>".Settings::_("menubar","powered")." <a href='http://www.photoshow-gallery.com'>PhotoShow</a> - © 2011 Thibaud Rohmer</span>";
+		//echo "<span>".Settings::_("menubar","powered")." <a href='http://www.photoshow-gallery.com'>PhotoShow</a> - © 2011 Thibaud Rohmer</span>";
 
 		echo "</div>\n";
 	}
