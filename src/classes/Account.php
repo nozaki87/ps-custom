@@ -300,7 +300,7 @@ class Account extends Page
 		}
 
 		/// Edit attributes
-		if(isset($password) && sizeof($password) > 4 ){
+		if(isset($password) && strlen($password) > 4 ){
 			$acc->password = Account::password($password);
 		}
 
@@ -450,6 +450,10 @@ class Account extends Page
 	 */
 	 public function toHTML(){
 	 	$this->header();
+		echo "<div class='menu'>\n";
+		echo "<a href='.'>".Settings::_("account","back")."</a>";
+	 	echo "</div>\n";
+
 	 	echo "<div class='center'>\n";
 
 		if(CurrentUser::$admin){
