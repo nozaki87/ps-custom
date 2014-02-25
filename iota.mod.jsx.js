@@ -1,5 +1,4 @@
-// generatedy by JSX compiler 0.9.68 (2013-10-24 16:05:37 +0900; 088594709dac5c6fa5c845dd3daa14b614de22ea)
-// modified by hand... from https://github.com/thaga/IOTA/commit/f6f6b3f60911f329bf1cbba646ebab2f05a74074
+// generatedy by JSX compiler 0.9.79 (2014-02-24 12:54:26 +0900; b5dd59d9f43bbf0e1136c6419bf44827e55702c8)
 var JSX = {};
 (function (JSX) {
 /**
@@ -45,11 +44,44 @@ function $__jsx_lazy_init(obj, prop, func) {
 	});
 }
 
+var $__jsx_imul = Math.imul;
+if (typeof $__jsx_imul === "undefined") {
+	$__jsx_imul = function (a, b) {
+		var ah  = (a >>> 16) & 0xffff;
+		var al = a & 0xffff;
+		var bh  = (b >>> 16) & 0xffff;
+		var bl = b & 0xffff;
+		return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
+	};
+}
+
 /**
- * sideeffect().a /= b
+ * fused int-ops with side-effects
  */
-function $__jsx_div_assign(obj, prop, divisor) {
-	return obj[prop] = (obj[prop] / divisor) | 0;
+function $__jsx_ipadd(o, p, r) {
+	return o[p] = (o[p] + r) | 0;
+}
+function $__jsx_ipsub(o, p, r) {
+	return o[p] = (o[p] - r) | 0;
+}
+function $__jsx_ipmul(o, p, r) {
+	return o[p] = $__jsx_imul(o[p], r);
+}
+function $__jsx_ipdiv(o, p, r) {
+	return o[p] = (o[p] / r) | 0;
+}
+function $__jsx_ipmod(o, p, r) {
+	return o[p] = (o[p] % r) | 0;
+}
+function $__jsx_ippostinc(o, p) {
+	var v = o[p];
+	o[p] = (v + 1) | 0;
+	return v;
+}
+function $__jsx_ippostdec(o, p) {
+	var v = o[p];
+	o[p] = (v - 1) | 0;
+	return v;
 }
 
 /*
@@ -102,59 +134,111 @@ JSX.resetProfileResults = function () {
 	return $__jsx_profiler.resetResults();
 };
 JSX.DEBUG = true;
-function StopIteration() {
-	Error.call(this);
-	this.name = "StopIteration";
-	if (Error.captureStackTrace) Error.captureStackTrace(this, StopIteration);
-};
+var GeneratorFunction$0 = 
+(function () {
+  try {
+    eval('import {GeneratorFunction} from "std:iteration"');
+    return GeneratorFunction;
+  } catch (e) {
+    return function GeneratorFunction () {};
+  }
+})();
+var __jsx_generator_object$0 = 
+(function () {
+  function __jsx_generator_object() {
+  	this.__next = 0;
+  	this.__loop = null;
+  	this.__value = undefined;
+  	this.__status = 0;	// SUSPENDED: 0, ACTIVE: 1, DEAD: 2
+  }
 
-$__jsx_extend([StopIteration], Error);
+  __jsx_generator_object.prototype.next = function () {
+  	switch (this.__status) {
+  	case 0:
+  		this.__status = 1;
+
+  		// go next!
+  		this.__loop(this.__next);
+
+  		var done = false;
+  		if (this.__next != -1) {
+  			this.__status = 0;
+  		} else {
+  			this.__status = 2;
+  			done = true;
+  		}
+  		return { value: this.__value, done: done };
+  	case 1:
+  		throw new Error("Generator is already running");
+  	case 2:
+  		throw new Error("Generator is already finished");
+  	default:
+  		throw new Error("Unexpected generator internal state");
+  	}
+  };
+
+  return __jsx_generator_object;
+}());
 function _Main() {
 };
 
 $__jsx_extend([_Main], Object);
 function _Main$main$AS(args) {
 	var canvas;
+	var timer;
 	var input;
 	var iota;
 	var all_canvas;
 	var i;
 	var elem;
 	var theta_url;
-	var timer;
 	canvas = dom$id$S('iota_canvas');
 	if (canvas) {
 		canvas.style.position = 'absolute';
 		canvas.style.left = '0px';
 		canvas.style.top = '0px';
 		input = dom$id$S('iota_input');
-		iota = new Iota$1(canvas, input);
-		canvas.width = canvas.parentNode.offsetWidth;
-		canvas.height = canvas.parentNode.offsetHeight;
+		iota = new Iota$2(canvas, input);
+		canvas.width = dom.window.innerWidth;
+		canvas.height = dom.window.innerHeight;
 		dom.window.onresize = (function (ev) {
-			canvas.width = canvas.parentNode.offsetWidth;
-			canvas.height = canvas.parentNode.offsetHeight;
+			var parent;
+			parent = canvas.offsetParent;
+			canvas.width = parent.offsetWidth;
+			canvas.height = parent.offsetHeight;
 			iota.draw();
 		});
-		timer = setInterval((function (ev) {
-			canvas.width = canvas.parentNode.offsetWidth;
-			canvas.height = canvas.parentNode.offsetHeight;
-			iota.draw();
-			clearInterval(timer);
-		}),1000);
+		timer = Timer$setInterval$F$V$N((function () {
+			var parent;
+			parent = canvas.offsetParent;
+			if (canvas.width !== parent.offsetWidth || canvas.height !== parent.offsetHeight) {
+				canvas.width = parent.offsetWidth;
+				canvas.height = parent.offsetHeight;
+				iota.draw();
+			}
+		}), 1000);
 	}
 	all_canvas = dom.window.document.getElementsByTagName('canvas');
-	for (i = 0; i < all_canvas.length; ++ i) {
+	for (i = 0; i < all_canvas.length; ++i) {
 		elem = all_canvas[i];
 		theta_url = elem.dataset.thetaImg;
 		if (theta_url) {
 			(function (canvas, url) {
-				var img;
-				img = dom.window.document.createElement('img');
-				img.onload = (function (ev) {
-					new Iota(canvas, null, img, canvas.dataset.iotaFisheye != null);
+				var curr_elem;
+				var xhr;
+				curr_elem = elem;
+				xhr = new XMLHttpRequest();
+				xhr.open('GET', theta_url, true);
+				xhr.responseType = 'blob';
+				xhr.onload = (function (e) {
+					var theta_img;
+					if (xhr.status === 200) {
+						console.log("get success");
+						theta_img = xhr.response;
+						new Iota$1(curr_elem, null, theta_img);
+					}
 				});
-				img.src = url;
+				xhr.send();
 			})(elem, theta_url);
 		}
 	}
@@ -163,7 +247,7 @@ function _Main$main$AS(args) {
 _Main.main = _Main$main$AS;
 _Main.main$AS = _Main$main$AS;
 
-function Iota(canvas, input, init_img, fish_eye) {
+function Iota(canvas, input, blob, init_img, fish_eye) {
 	var $this = this;
 	var hdiv;
 	var vdiv;
@@ -205,8 +289,8 @@ function Iota(canvas, input, init_img, fish_eye) {
 		var y;
 		var x;
 		lattice_array = new Float32Array((hdiv + 1) * (vdiv + 1) * 2);
-		for (y = 0; y <= vdiv; ++ y) {
-			for (x = 0; x <= hdiv; ++ x) {
+		for (y = 0; y <= vdiv; ++y) {
+			for (x = 0; x <= hdiv; ++x) {
 				lattice_array[(y * (hdiv + 1) + x) * 2] = x / hdiv;
 				lattice_array[(y * (hdiv + 1) + x) * 2 + 1] = y / vdiv;
 			}
@@ -220,8 +304,8 @@ function Iota(canvas, input, init_img, fish_eye) {
 		var x;
 		band_points = (hdiv + 1) * 2 + 2;
 		index_array = new Uint16Array(band_points * vdiv);
-		for (y = 0; y < vdiv; ++ y) {
-			for (x = 0; x <= hdiv; ++ x) {
+		for (y = 0; y < vdiv; ++y) {
+			for (x = 0; x <= hdiv; ++x) {
 				index_array[y * band_points + x * 2] = (y + 1) * (hdiv + 1) + x;
 				index_array[y * band_points + x * 2 + 1] = y * (hdiv + 1) + x;
 			}
@@ -241,19 +325,19 @@ function Iota(canvas, input, init_img, fish_eye) {
 	gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray(0);
 	vs = gl.createShader(gl.VERTEX_SHADER);
-	gl.shaderSource(vs, "\n			precision mediump float;\n			uniform mat4 projectionMatrix;\n			uniform mat4 modelviewMatrix;\n			attribute vec2 position;\n			varying vec2 v_texcoord;\n			void main() {\n				float h = (position.x + 0.25) * 3.14159265 * 2.0;\n				float v = (position.y - 0.5) * 3.14159265;\n				float hc = cos(h), hs = sin(h);\n				float vc = cos(v), vs = sin(v);\n				v_texcoord = position;\n				gl_Position = projectionMatrix * modelviewMatrix * vec4(vc * hc, vs, vc * hs, 1.0);\n			}\n		");
+	gl.shaderSource(vs, "\n\t\t\tprecision mediump float;\n\t\t\tuniform mat4 projectionMatrix;\n\t\t\tuniform mat4 modelviewMatrix;\n\t\t\tattribute vec2 position;\n\t\t\tvarying vec2 v_texcoord;\n\t\t\tvoid main() {\n\t\t\t\tfloat h = (position.x + 0.25) * 3.14159265 * 2.0;\n\t\t\t\tfloat v = (position.y - 0.5) * 3.14159265;\n\t\t\t\tfloat hc = cos(h), hs = sin(h);\n\t\t\t\tfloat vc = cos(v), vs = sin(v);\n\t\t\t\tv_texcoord = position;\n\t\t\t\tgl_Position = projectionMatrix * modelviewMatrix * vec4(vc * hc, vs, vc * hs, 1.0);\n\t\t\t}\n\t\t");
 	gl.compileShader(vs);
 	if (! (!! gl.getShaderParameter(vs, gl.COMPILE_STATUS))) {
 		console.log(gl.getShaderInfoLog(vs));
 	}
 	vs_f = gl.createShader(gl.VERTEX_SHADER);
-	gl.shaderSource(vs_f, "\n			precision mediump float;\n			uniform mat4 projectionMatrix;\n			uniform mat4 modelviewMatrix;\n			attribute vec2 position;\n			varying vec2 v_texcoord;\n			void main() {\n				v_texcoord = position;\n				float h = (position.x + 0.25) * 3.14159265 * 2.0;\n				float v = (position.y - 0.5) * 3.14159265;\n				float hc = cos(h), hs = sin(h);\n				float vc = cos(v), vs = sin(v);\n				vec3 p = (modelviewMatrix * vec4(vc * hc, vs, vc * hs, 1.0)).xyz;\n				float n = -projectionMatrix[3][2] - 1.0;\n				\n				// 等距離射影\n				float phi = atan(p.y, p.x);\n				float r = 4.0 * sqrt(n) * acos(-p.z);\n				gl_Position = projectionMatrix * vec4(r * cos(phi), r * sin(phi), p.z - n - 0.9, 1.0);\n				\n				// 回転放物面への等距離射影(?) (t-potさんとこのやつ)\n//				float xy2 = dot(p.xy, p.xy);\n//				float d = length(p);\n//				gl_Position = projectionMatrix * vec4(p.x * (d + p.z) / xy2, p.y * (d + p.z) / xy2, p.z -n - 0.9, 1.0);\n			}\n		");
+	gl.shaderSource(vs_f, "\n\t\t\tprecision mediump float;\n\t\t\tuniform mat4 projectionMatrix;\n\t\t\tuniform mat4 modelviewMatrix;\n\t\t\tattribute vec2 position;\n\t\t\tvarying vec2 v_texcoord;\n\t\t\tvoid main() {\n\t\t\t\tv_texcoord = position;\n\t\t\t\tfloat h = (position.x + 0.25) * 3.14159265 * 2.0;\n\t\t\t\tfloat v = (position.y - 0.5) * 3.14159265;\n\t\t\t\tfloat hc = cos(h), hs = sin(h);\n\t\t\t\tfloat vc = cos(v), vs = sin(v);\n\t\t\t\tvec3 p = (modelviewMatrix * vec4(vc * hc, vs, vc * hs, 1.0)).xyz;\n\t\t\t\tfloat n = -projectionMatrix[3][2] - 1.0;\n\t\t\t\t\n\t\t\t\t// \u7b49\u8ddd\u96e2\u5c04\u5f71\n\t\t\t\tfloat phi = atan(p.y, p.x);\n\t\t\t\tfloat r = 4.0 * sqrt(n) * acos(-p.z);\n\t\t\t\tgl_Position = projectionMatrix * vec4(r * cos(phi), r * sin(phi), p.z - n - 0.9, 1.0);\n\t\t\t\t\n\t\t\t\t// \u56de\u8ee2\u653e\u7269\u9762\u3078\u306e\u7b49\u8ddd\u96e2\u5c04\u5f71(?) (t-pot\u3055\u3093\u3068\u3053\u306e\u3084\u3064)\n//\t\t\t\tfloat xy2 = dot(p.xy, p.xy);\n//\t\t\t\tfloat d = length(p);\n//\t\t\t\tgl_Position = projectionMatrix * vec4(p.x * (d + p.z) / xy2, p.y * (d + p.z) / xy2, p.z -n - 0.9, 1.0);\n\t\t\t}\n\t\t");
 	gl.compileShader(vs_f);
 	if (! (!! gl.getShaderParameter(vs_f, gl.COMPILE_STATUS))) {
 		console.log(gl.getShaderInfoLog(vs_f));
 	}
 	fs = gl.createShader(gl.FRAGMENT_SHADER);
-	gl.shaderSource(fs, "\n			precision mediump float;\n			uniform sampler2D texture;\n			varying vec2 v_texcoord;\n			void main() {\n				gl_FragColor = texture2D(texture, v_texcoord);\n			}\n		");
+	gl.shaderSource(fs, "\n\t\t\tprecision mediump float;\n\t\t\tuniform sampler2D texture;\n\t\t\tvarying vec2 v_texcoord;\n\t\t\tvoid main() {\n\t\t\t\tgl_FragColor = texture2D(texture, v_texcoord);\n\t\t\t}\n\t\t");
 	gl.compileShader(fs);
 	if (! (!! gl.getShaderParameter(fs, gl.COMPILE_STATUS))) {
 		console.log(gl.getShaderInfoLog(fs));
@@ -332,17 +416,21 @@ function Iota(canvas, input, init_img, fish_eye) {
 	}
 	files = null;
 	file_index = - 1;
-	function setFile(n) {
+	function setFile(n, blob) {
 		var file;
 		var file_reader;
 		var binary_reader;
-		if (! files) {
-			return;
+		if (blob) {
+			file = blob;
+		} else {
+			if (! files) {
+				return;
+			}
+			if (n < 0 || n >= files.length) {
+				return;
+			}
+			file = files[n];
 		}
-		if (n < 0 || n >= files.length) {
-			return;
-		}
-		file = files[n];
 		file_reader = new FileReader();
 		file_reader.onload = (function (e) {
 			var img;
@@ -374,13 +462,13 @@ function Iota(canvas, input, init_img, fish_eye) {
 			result = binary_reader.result + "";
 			bin = new Uint8Array(result.length);
 			i = 0;
-			for (i = 0; i < bin.length; ++ i) {
+			for (i = 0; i < bin.length; ++i) {
 				bin[i] = result.charCodeAt(i) & 0xff;
 			}
 			sign = [ 0, 3, 0, 10, 0, 0, 0, 2 ];
 			header_bound = 10000;
-			for (pos = 0; pos < header_bound; ++ pos) {
-				for (i = 0; i < sign.length; ++ i) {
+			for (pos = 0; pos < header_bound; ++pos) {
+				for (i = 0; i < sign.length; ++i) {
 					if (bin[i + pos] !== sign[i]) {
 						break;
 					}
@@ -415,7 +503,7 @@ function Iota(canvas, input, init_img, fish_eye) {
 	if (input) {
 		input.onchange = (function (e) {
 			files = input.files;
-			setFile(((file_index = 0) | 0));
+			setFile(((file_index = 0) | 0), null);
 		});
 	}
 	canvas.ondragover = (function (e) {
@@ -426,7 +514,7 @@ function Iota(canvas, input, init_img, fish_eye) {
 		e.preventDefault();
 		de = e;
 		files = de.dataTransfer.files;
-		setFile(((file_index = 0) | 0));
+		setFile(((file_index = 0) | 0), null);
 	});
 	canvas.onmousewheel = (function (ev) {
 		var wev;
@@ -551,15 +639,15 @@ function Iota(canvas, input, init_img, fish_eye) {
 			console.log('unknown key code: ', kev.keyCode);
 			break;
 		case 37:
-			if (files && -- file_index >= 0) {
-				setFile((file_index | 0));
+			if (files && --file_index >= 0) {
+				setFile((file_index | 0), null);
 			} else {
 				file_index = 0;
 			}
 			break;
 		case 39:
-			if (files && ++ file_index < files.length) {
-				setFile((file_index | 0));
+			if (files && ++file_index < files.length) {
+				setFile((file_index | 0), null);
 			} else {
 				file_index = files.length - 1;
 			}
@@ -570,19 +658,27 @@ function Iota(canvas, input, init_img, fish_eye) {
 			break;
 		}
 	}));
+	if (blob) {
+		setFile(((file_index = 0) | 0), blob);
+	}
 };
 
-function Iota$0(canvas, input, init_img) {
+function Iota$0(canvas, input, blob, init_img) {
 	var $this = this;
-	Iota.call(this, canvas, input, init_img, false);
+	Iota.call(this, canvas, input, blob, init_img, false);
 };
 
-function Iota$1(canvas, input) {
+function Iota$1(canvas, input, blob) {
 	var $this = this;
-	Iota.call(this, canvas, input, null, false);
+	Iota.call(this, canvas, input, blob, null, false);
 };
 
-$__jsx_extend([Iota, Iota$0, Iota$1], Object);
+function Iota$2(canvas, input) {
+	var $this = this;
+	Iota.call(this, canvas, input, null, null, false);
+};
+
+$__jsx_extend([Iota, Iota$0, Iota$1, Iota$2], Object);
 function dom() {}
 $__jsx_extend([dom], Object);
 function dom$id$S(id) {
@@ -687,7 +783,6 @@ function KeyboardEventInit() {
 	this.cancelable = false;
 	this.view = null;
 	this.detail = 0;
-	this.char = "";
 	this.key = "";
 	this.location = 0;
 	this.ctrlKey = false;
@@ -695,7 +790,6 @@ function KeyboardEventInit() {
 	this.altKey = false;
 	this.metaKey = false;
 	this.repeat = false;
-	this.locale = "";
 	this.charCode = 0;
 	this.keyCode = 0;
 	this.which = 0;
@@ -708,7 +802,6 @@ function CompositionEventInit() {
 	this.view = null;
 	this.detail = 0;
 	this.data = null;
-	this.locale = "";
 };
 
 $__jsx_extend([CompositionEventInit], Object);
@@ -726,12 +819,34 @@ function XMLHttpRequestOptions() {
 
 $__jsx_extend([XMLHttpRequestOptions], Object);
 function ScrollOptions() {
-	this.x = 0;
-	this.y = 0;
 	this.behavior = "";
 };
 
 $__jsx_extend([ScrollOptions], Object);
+function ScrollOptionsHorizontal() {
+	ScrollOptions.call(this);
+	this.x = 0;
+};
+
+$__jsx_extend([ScrollOptionsHorizontal], ScrollOptions);
+function ScrollOptionsVertical() {
+	ScrollOptions.call(this);
+	this.y = 0;
+};
+
+$__jsx_extend([ScrollOptionsVertical], ScrollOptions);
+function BoxQuadOptions() {
+	this.box = "";
+	this.relativeTo = null;
+};
+
+$__jsx_extend([BoxQuadOptions], Object);
+function ConvertCoordinateOptions() {
+	this.fromBox = "";
+	this.toBox = "";
+};
+
+$__jsx_extend([ConvertCoordinateOptions], Object);
 function TrackEventInit() {
 	EventInit.call(this);
 	this.track = null;
@@ -833,53 +948,62 @@ function NotificationOptions() {
 };
 
 $__jsx_extend([NotificationOptions], Object);
-function RTCSessionDescriptionInit() {
-	this.type = "";
-	this.sdp = "";
+function DOMPointInit() {
+	this.x = 0;
+	this.y = 0;
+	this.z = 0;
+	this.w = 0;
 };
 
-$__jsx_extend([RTCSessionDescriptionInit], Object);
-function RTCIceCandidateInit() {
-	this.candidate = "";
-	this.sdpMid = "";
-	this.sdpMLineIndex = 0;
+$__jsx_extend([DOMPointInit], Object);
+function SourceInfo() {
+	this.sourceId = "";
+	this.kind = "";
+	this.label = "";
 };
 
-$__jsx_extend([RTCIceCandidateInit], Object);
-function RTCIceServer() {
-	this.url = "";
-	this.credential = null;
-};
-
-$__jsx_extend([RTCIceServer], Object);
-function RTCConfiguration() {
-	this.iceServers = null;
-};
-
-$__jsx_extend([RTCConfiguration], Object);
-function DataChannelInit() {
-	this.reliable = false;
-};
-
-$__jsx_extend([DataChannelInit], Object);
-function RTCPeerConnectionIceEventInit() {
+$__jsx_extend([SourceInfo], Object);
+function MediaStreamTrackEventInit() {
 	EventInit.call(this);
-	this.candidate = null;
+	this.track = null;
 };
 
-$__jsx_extend([RTCPeerConnectionIceEventInit], EventInit);
-function MediaStreamEventInit() {
-	EventInit.call(this);
-	this.stream = null;
+$__jsx_extend([MediaStreamTrackEventInit], EventInit);
+function MediaSourceStates() {
+	this.sourceType = "";
+	this.sourceId = "";
+	this.width = null;
+	this.height = null;
+	this.frameRate = null;
+	this.aspectRatio = null;
+	this.facingMode = null;
+	this.volume = null;
 };
 
-$__jsx_extend([MediaStreamEventInit], EventInit);
-function DataChannelEventInit() {
-	EventInit.call(this);
-	this.channel = null;
+$__jsx_extend([MediaSourceStates], Object);
+function CapabilityRange() {
+	this.max = null;
+	this.min = null;
+	this.supported = false;
 };
 
-$__jsx_extend([DataChannelEventInit], EventInit);
+$__jsx_extend([CapabilityRange], Object);
+function AllVideoCapabilities() {
+	this.sourceType = null;
+	this.sourceId = null;
+	this.width = null;
+	this.height = null;
+	this.frameRate = null;
+	this.aspectRatio = null;
+	this.facingMode = null;
+};
+
+$__jsx_extend([AllVideoCapabilities], Object);
+function AllAudioCapabilities() {
+	this.volume = null;
+};
+
+$__jsx_extend([AllAudioCapabilities], Object);
 function MediaStreamConstraints() {
 	this.video = null;
 	this.audio = null;
@@ -888,10 +1012,16 @@ function MediaStreamConstraints() {
 $__jsx_extend([MediaStreamConstraints], Object);
 function MediaTrackConstraints() {
 	this.mandatory = null;
-	this.optional = null;
+	this._optional = null;
 };
 
 $__jsx_extend([MediaTrackConstraints], Object);
+function MinMaxConstraint() {
+	this.max = null;
+	this.min = null;
+};
+
+$__jsx_extend([MinMaxConstraint], Object);
 function HitRegionOptions() {
 	this.path = null;
 	this.id = "";
@@ -991,7 +1121,7 @@ function Timer$_getRequestAnimationFrameImpl$B(useNativeImpl) {
 	var lastTime;
 	if (useNativeImpl) {
 		prefixes = [ "r", "webkitR", "mozR", "oR", "msR" ];
-		for (i = 0; i < prefixes.length; ++ i) {
+		for (i = 0; i < prefixes.length; ++i) {
 			name = prefixes[i] + "equestAnimationFrame";
 			if (js$0.global[name] instanceof Function) {
 				return (function (callback) {
@@ -1021,7 +1151,7 @@ function Timer$_getCancelAnimationFrameImpl$B(useNativeImpl) {
 	var name;
 	if (useNativeImpl) {
 		prefixes = [ "c", "webkitC", "mozC", "oC", "msC" ];
-		for (i = 0; i < prefixes.length; ++ i) {
+		for (i = 0; i < prefixes.length; ++i) {
 			name = prefixes[i] + "ancelAnimationFrame";
 			if (js$0.global[name] instanceof Function) {
 				return (function (timer) {
@@ -4017,7 +4147,17 @@ function _Main$0$main$AS(args) {
 _Main$0.main = _Main$0$main$AS;
 _Main$0.main$AS = _Main$0$main$AS;
 
-var js$0 = (function () { var global = (function () { return this; }()); return { global: global, eval: global.eval, invoke: function(invocant, methodName, args) { return invocant[methodName].apply(invocant, args); } }; }());
+var js$0 = (function () {
+	var global = (function () { return this; }());
+	return {
+		global: global,
+		eval: global.eval,
+		invoke: function(invocant, methodName, args) {
+			return invocant[methodName].apply(invocant, args);
+		},
+		newFunction: Function
+	};
+}());
 $__jsx_lazy_init(dom, "window", function () {
 	return js$0.global.window;
 });
@@ -4033,17 +4173,14 @@ $__jsx_lazy_init(Timer, "_cancelAnimationFrame", function () {
 MVQ.EQUAL_EPSILON = 0.000001;
 
 var $__jsx_classMap = {
-	"system:lib/built-in.jsx": {
-		StopIteration: StopIteration,
-		StopIteration$: StopIteration
-	},
 	"iota.jsx": {
 		_Main: _Main,
 		_Main$: _Main,
 		Iota: Iota,
-		Iota$LHTMLCanvasElement$LHTMLInputElement$LHTMLImageElement$B: Iota,
-		Iota$LHTMLCanvasElement$LHTMLInputElement$LHTMLImageElement$: Iota$0,
-		Iota$LHTMLCanvasElement$LHTMLInputElement$: Iota$1
+		Iota$LHTMLCanvasElement$LHTMLInputElement$LBlob$LHTMLImageElement$B: Iota,
+		Iota$LHTMLCanvasElement$LHTMLInputElement$LBlob$LHTMLImageElement$: Iota$0,
+		Iota$LHTMLCanvasElement$LHTMLInputElement$LBlob$: Iota$1,
+		Iota$LHTMLCanvasElement$LHTMLInputElement$: Iota$2
 	},
 	"system:lib/js/js/web.jsx": {
 		dom: dom,
@@ -4071,6 +4208,14 @@ var $__jsx_classMap = {
 		XMLHttpRequestOptions$: XMLHttpRequestOptions,
 		ScrollOptions: ScrollOptions,
 		ScrollOptions$: ScrollOptions,
+		ScrollOptionsHorizontal: ScrollOptionsHorizontal,
+		ScrollOptionsHorizontal$: ScrollOptionsHorizontal,
+		ScrollOptionsVertical: ScrollOptionsVertical,
+		ScrollOptionsVertical$: ScrollOptionsVertical,
+		BoxQuadOptions: BoxQuadOptions,
+		BoxQuadOptions$: BoxQuadOptions,
+		ConvertCoordinateOptions: ConvertCoordinateOptions,
+		ConvertCoordinateOptions$: ConvertCoordinateOptions,
 		TrackEventInit: TrackEventInit,
 		TrackEventInit$: TrackEventInit,
 		PopStateEventInit: PopStateEventInit,
@@ -4099,26 +4244,26 @@ var $__jsx_classMap = {
 		IDBVersionChangeEventInit$: IDBVersionChangeEventInit,
 		NotificationOptions: NotificationOptions,
 		NotificationOptions$: NotificationOptions,
-		RTCSessionDescriptionInit: RTCSessionDescriptionInit,
-		RTCSessionDescriptionInit$: RTCSessionDescriptionInit,
-		RTCIceCandidateInit: RTCIceCandidateInit,
-		RTCIceCandidateInit$: RTCIceCandidateInit,
-		RTCIceServer: RTCIceServer,
-		RTCIceServer$: RTCIceServer,
-		RTCConfiguration: RTCConfiguration,
-		RTCConfiguration$: RTCConfiguration,
-		DataChannelInit: DataChannelInit,
-		DataChannelInit$: DataChannelInit,
-		RTCPeerConnectionIceEventInit: RTCPeerConnectionIceEventInit,
-		RTCPeerConnectionIceEventInit$: RTCPeerConnectionIceEventInit,
-		MediaStreamEventInit: MediaStreamEventInit,
-		MediaStreamEventInit$: MediaStreamEventInit,
-		DataChannelEventInit: DataChannelEventInit,
-		DataChannelEventInit$: DataChannelEventInit,
+		DOMPointInit: DOMPointInit,
+		DOMPointInit$: DOMPointInit,
+		SourceInfo: SourceInfo,
+		SourceInfo$: SourceInfo,
+		MediaStreamTrackEventInit: MediaStreamTrackEventInit,
+		MediaStreamTrackEventInit$: MediaStreamTrackEventInit,
+		MediaSourceStates: MediaSourceStates,
+		MediaSourceStates$: MediaSourceStates,
+		CapabilityRange: CapabilityRange,
+		CapabilityRange$: CapabilityRange,
+		AllVideoCapabilities: AllVideoCapabilities,
+		AllVideoCapabilities$: AllVideoCapabilities,
+		AllAudioCapabilities: AllAudioCapabilities,
+		AllAudioCapabilities$: AllAudioCapabilities,
 		MediaStreamConstraints: MediaStreamConstraints,
 		MediaStreamConstraints$: MediaStreamConstraints,
 		MediaTrackConstraints: MediaTrackConstraints,
 		MediaTrackConstraints$: MediaTrackConstraints,
+		MinMaxConstraint: MinMaxConstraint,
+		MinMaxConstraint$: MinMaxConstraint,
 		HitRegionOptions: HitRegionOptions,
 		HitRegionOptions$: HitRegionOptions,
 		WebGLContextAttributes: WebGLContextAttributes,
@@ -4130,7 +4275,7 @@ var $__jsx_classMap = {
 		DeviceMotionEventInit: DeviceMotionEventInit,
 		DeviceMotionEventInit$: DeviceMotionEventInit
 	},
-	"system:lib/js/Timer.jsx": {
+	"system:lib/js/timer.jsx": {
 		Timer: Timer,
 		Timer$: Timer,
 		TimerHandle: TimerHandle
@@ -4273,4 +4418,3 @@ window.addEventListener("load", $__jsx_onload);
 document.addEventListener("DOMContentLoaded", $__jsx_onload);
 
 })(JSX);
-
