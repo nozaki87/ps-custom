@@ -31,23 +31,20 @@
 
 // Folder where your pictures are stored.
 // Must be at least readable by web server process
-//$config->photos_dir   = "path_to_your_photos_dir_goes_here";
-$config->photos_dir   = "/home/nau/www/private_files/ph0/photos";
+$config->photos_dir   = "path_to_your_photos_dir_goes_here";
 
 // Folder where PhotoShow parameters and thumbnails are stored.
 // Must be writable by web server process
-//$config->ps_generated   = "path_where_photoshow_generates_files_goes_here";
-$config->ps_generated   = "/home/nau/www/private_files/ph0/generated";
+$config->ps_generated   = "path_where_photoshow_generates_files_goes_here";
 
 // Local timezone. Default one is "Europe/Paris".
-//#$config->timezone = "Europe/Paris";
-$config->timezone = "Europe/Paris";
+#$config->timezone = "Europe/Paris";
 
 // If you use symbolic link in photos_dir, please set source/destination dir path
 // to notify PhotoShow where they are.
-$config->symlink_src[0] = "/mnt/storage1/www/owncloud/data/nau/files/photos";
-$config->symlink_src[1] = "defra3raccr4rg";
-$config->symlink_dst[0] = "/home/nau/www/private_files/ph0/photos/nau";
-$config->symlink_dst[1] = "456r4r4w4w4rw7";
+$config->symlink_src[0] = "/external/storage1/photo";
+$config->symlink_src[1] = "/external/storage2/photo";
+$config->symlink_dst[0] = "path_to_your_photos_dir_goes_here/photo_on_storage1";
+$config->symlink_dst[1] = "path_to_your_photos_dir_goes_here/photo_on_storage2";
 
 ?>
