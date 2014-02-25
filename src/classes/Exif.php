@@ -54,6 +54,9 @@ class Exif implements HTMLObject
 	/// Name of the file
 	private $filename;
 
+	/// map url
+	private $mapurl = null;
+
 	/**
 	 * Create Exif class
 	 *
@@ -92,7 +95,10 @@ class Exif implements HTMLObject
 					$this->exif[$name]	=	$this->parse_exif($d,$raw_exif);
 				}
 			}
-		}	
+		}
+		if (isset($raw_exif['GPS']) || isset($raw_exif['GPSLatitude'])) {
+			$this->extract_gps($raw_exif);
+		}
 		$this->filename = basename($file);
 	}
 	
@@ -129,6 +135,9 @@ class Exif implements HTMLObject
 				echo "<td class='td_value'>".htmlentities($value, ENT_QUOTES ,'UTF-8')."</td></tr>\n";
 			}
 			echo "</table>\n";
+			if ($this->map_url) {
+				echo "<iframe src='".$this->map_url."' width='100%' height='100%' frameborder='0' style='border:0'></iframe>";
+			}
 			echo "</div>";
 		}
 	}
@@ -205,5 +214,46 @@ class Exif implements HTMLObject
 		}
 		return $v;
 	}
+	private function  extract_gpsDMS($data, $LatOrLong, $LatOrLongRef){
+		$degrees = $data[$LatOrLong][0];
+		$parts = explode('/', $degrees);
+		$degrees = $parts[0] / $parts[1];
+
+		if ($data[$LatOrLongRef] == 'W' || $data[$LatOrLongRef] == 'S') {
+			$degrees = -$degrees;
+		}
+
+		$minutes = $data[$LatOrLong][1];
+		$parts = explode('/', $minutes);
+		$minutes = $parts[0] / $parts[1];
+
+		$seconds = $data[$LatOrLong][2];
+		$parts = explode('/', $seconds);
+		$seconds = $parts[0] / $parts[1];
+
+		return $degrees.";".$minutes .";".$seconds;
+	}
+	private function  extract_gpsDeg($data, $LatOrLong, $LatOrLongRef){
+		$dms = $this->extract_gpsDMS($data, $LatOrLong, $LatOrLongRef);
+		$parts = explode(';', $dms);
+		if ($parts[0] < 0) {
+			return $parts[0] - (($parts[1] + ($parts[2] / 60)) / 60);
+		} else {
+			return $parts[0] + (($parts[1] + ($parts[2] / 60)) / 60);
+		}
+	}
+	private function extract_gps($data) {
+		if (isset($data['GPS'])) {
+			$gpsdata = $data['GPS'];
+		} else {
+			$gpsdata = $data;
+		}
+		$this->exif['GPSLatitude']  = $this->extract_gpsDMS($gpsdata, 'GPSLatitude', 'GPSLatitudeRef');
+		$this->exif['GPSLongitude'] = $this->extract_gpsDMS($gpsdata, 'GPSLongitude', 'GPSLongitudeRef');
+		$latitude = $this->extract_gpsDeg($gpsdata, 'GPSLatitude', 'GPSLatitudeRef');
+		$longitude = $this->extract_gpsDeg($gpsdata, 'GPSLongitude', 'GPSLongitudeRef');
+		$this->map_url = "https://maps.google.com/maps?q=loc:".$latitude.",".$longitude."&iwloc=J&z=13&hl=en&output=embedmfe";
+	}
 }
+
 ?>

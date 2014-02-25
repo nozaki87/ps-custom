@@ -96,7 +96,6 @@ class Image implements HTMLObject
 			$exif = new Exif($file);
 			$exifinfo = $exif->getEXIF();
 			$model = $exifinfo['Model'];
-			error_log($model."RICOH THETA");
 			if(preg_match("/RICOH THETA.+/i",$model)) {
 				$this->viewmode = 2;
 				$this->t = "Big";
