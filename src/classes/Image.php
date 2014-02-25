@@ -126,7 +126,7 @@ class Image implements HTMLObject
 			echo 	"';>";
 			echo	"<canvas id='iota_canvas' data-theta-img='?t=".$this->t."&f=".$this->fileweb."' data-iota-fisheye='true' ></canvas>";
 			echo	"</div>";
-			echo	"<script src='iota.mod.jsx.js'></script>\n"; 
+			echo	"<script src='src/js/iota-noz.jsx.js'></script>\n"; 
 			return;
 		}
 		echo 	"<div id='image_big' ";
