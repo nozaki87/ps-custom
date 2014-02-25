@@ -99,6 +99,7 @@ class Image implements HTMLObject
 			error_log($model."RICOH THETA");
 			if(preg_match("/RICOH THETA.+/i",$model)) {
 				$this->viewmode = 2;
+				$this->t = "Big";
 			} else {
 				$this->viewmode = 1;
 			}

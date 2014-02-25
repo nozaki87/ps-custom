@@ -211,10 +211,12 @@ function _Main$main$AS(args) {
 		timer = Timer$setInterval$F$V$N((function () {
 			var parent;
 			parent = canvas.offsetParent;
-			if (canvas.width !== parent.offsetWidth || canvas.height !== parent.offsetHeight) {
-				canvas.width = parent.offsetWidth;
-				canvas.height = parent.offsetHeight;
-				iota.draw();
+			if (parent) {
+				if (canvas.width !== parent.offsetWidth || canvas.height !== parent.offsetHeight) {
+					canvas.width = parent.offsetWidth;
+					canvas.height = parent.offsetHeight;
+					iota.draw();
+				}
 			}
 		}), 1000);
 	}
