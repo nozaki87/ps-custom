@@ -235,7 +235,6 @@ function _Main$main$AS(args) {
 				xhr.onload = (function (e) {
 					var theta_img;
 					if (xhr.status === 200) {
-						console.log("get success");
 						theta_img = xhr.response;
 						new Iota$1(curr_elem, null, theta_img);
 					}
