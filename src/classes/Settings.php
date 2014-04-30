@@ -171,6 +171,7 @@ class Settings extends Page
 
 
         /// Set default values for $config
+        $config = new stdClass();
         $config->timezone = "Europe/Paris";
 
 		/// Load config.php file 
